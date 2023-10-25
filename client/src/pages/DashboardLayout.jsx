@@ -2,9 +2,16 @@ import React, { createContext, useState } from "react";
 import SmallSidebar from "../components/SmallSidebar";
 import BigSidebar from "../components/BigSidebar";
 import Navbar from "../components/Navbar";
-import { Outlet, redirect, useLoaderData, useNavigate } from "react-router-dom";
+import {
+  Outlet,
+  redirect,
+  useLoaderData,
+  useNavigate,
+  useNavigation,
+} from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Loading from "../components/Loading";
 
 export const loader = async () => {
   try {
@@ -20,6 +27,8 @@ export const DashboardContext = createContext();
 export default function DashboardLayout() {
   const [showSidebar, setShowSidebar] = useState(false);
   const navigate = useNavigate();
+  const navigation = useNavigation();
+  const isPageLoading = navigation.state === "loading";
   const { user } = useLoaderData(); //user is an object inside data object
 
   // const [isDarkTheme, setIsDarkTheme] = useState(false);
@@ -60,7 +69,7 @@ export default function DashboardLayout() {
           <div className="">
             <Navbar />
             <div className=" logo my-0 mx-auto py-8 px-0 lg:w-11/12">
-              <Outlet context={{ user }} />
+              {isPageLoading ? <Loading /> : <Outlet context={{ user }} />}
             </div>
           </div>
         </main>
